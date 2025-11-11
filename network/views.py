@@ -1,6 +1,6 @@
 from django.shortcuts import render
 
-# Create your views here.
+
 
 from django.shortcuts import render, redirect
 from .forms import DhcpRequestForm
@@ -8,12 +8,12 @@ from datetime import datetime, timedelta
 from pymongo import MongoClient
 import re
 
-# in-memory leases so same MAC gets same IP
+
 LEASES = {}
 
-# IPv4 pool start (we'll just count up)
+
 IPV4_NETWORK = "192.168.1."
-IPV4_START = 10  # start from .10 to avoid gateway
+IPV4_START = 10 
 LEASE_TIME_SECONDS = 3600
 
 
@@ -40,26 +40,25 @@ def assign_ipv4(mac):
         candidate = f"{IPV4_NETWORK}{host}"
         if candidate not in used_ips:
             return candidate
-    return None  # pool exhausted
+    return None  
 
 def mac_to_eui64_ipv6(mac):
     # mac like "00:1A:2B:3C:4D:5E"
     parts = mac.split(":")
     mac_bytes = [int(p, 16) for p in parts]
 
-    mac_bytes[0] = mac_bytes[0] ^ 0x02  # toggle U/L bit
+    mac_bytes[0] = mac_bytes[0] ^ 0x02 
 
     eui64 = mac_bytes[0:3] + [0xFF, 0xFE] + mac_bytes[3:]
 
-    # format to IPv6 under 2001:db8::/64
-    # eui64 is 8 bytes -> 4 groups of 16 bits
+ 
     groups = [
         (eui64[0] << 8) + eui64[1],
         (eui64[2] << 8) + eui64[3],
         (eui64[4] << 8) + eui64[5],
         (eui64[6] << 8) + eui64[7],
     ]
-    # base prefix
+ 
     ipv6 = f"2001:db8::{groups[0]:04x}:{groups[1]:04x}:{groups[2]:04x}:{groups[3]:04x}"
     return ipv6
 
@@ -83,7 +82,7 @@ def dhcp_request_view(request):
 
             lease_end = datetime.utcnow() + timedelta(seconds=LEASE_TIME_SECONDS)
 
-            # save in memory
+        
             LEASES[mac] = {
                 'mac_address': mac,
                 'dhcp_version': version,
@@ -92,7 +91,7 @@ def dhcp_request_view(request):
                 'timestamp': datetime.utcnow(),
             }
 
-            # save in Mongo
+      
             col = get_mongo_collection()
             col.insert_one({
                 "mac_address": mac,
