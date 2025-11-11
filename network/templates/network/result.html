@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>DHCP Result</title>
+</head>
+<body>
+  <h1>Lease Assigned</h1>
+  <p>MAC: {{ mac }}</p>
+  <p>DHCP Version: {{ dhcp_version }}</p>
+  <p>Assigned IP: {{ assigned_ip }}</p>
+  <p>Lease Time: {{ lease_time }} seconds</p>
+  <p><a href="{% url 'dhcp_form' %}">New request</a></p>
+  <p><a href="{% url 'view_leases' %}">View all leases</a></p>
+</body>
+</html>

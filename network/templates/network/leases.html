@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>All Leases</title>
+</head>
+<body>
+  <h1>All DHCP Leases (MongoDB)</h1>
+  <table border="1" cellpadding="5">
+    <tr>
+      <th>MAC</th>
+      <th>DHCP Version</th>
+      <th>Assigned IP</th>
+      <th>Lease Time</th>
+      <th>Timestamp</th>
+    </tr>
+    {% for lease in leases %}
+    <tr>
+      <td>{{ lease.mac_address }}</td>
+      <td>{{ lease.dhcp_version }}</td>
+      <td>{{ lease.assigned_ip }}</td>
+      <td>{{ lease.lease_time }}</td>
+      <td>{{ lease.timestamp }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+  <p><a href="{% url 'dhcp_form' %}">Back to form</a></p>
+</body>
+</html>
